@@ -1,0 +1,18 @@
+# Python 3.10 or 3.11 is recommended (3.11 is the safest choice for this project).
+# Install with: python -m pip install -r requirements.txt
+#
+# The CPU build of PyTorch keeps Streamlit Community Cloud deployment smaller.
+# For local NVIDIA training, see the GPU note in README.md.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.4.1+cpu
+transformers==4.44.2
+datasets==2.21.0
+pyarrow==16.1.0
+accelerate==0.34.2
+scikit-learn==1.5.1
+pandas==2.2.2
+numpy==1.26.4
+matplotlib==3.9.2
+seaborn==0.13.2
+streamlit==1.41.1

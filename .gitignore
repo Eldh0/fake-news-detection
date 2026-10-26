@@ -1,0 +1,54 @@
+# ----------------------------
+# Dataset files (do not commit)
+# ----------------------------
+data/*
+!data/.gitkeep
+
+# ----------------------------
+# Trained model / checkpoints
+# ----------------------------
+saved_model/
+checkpoints/
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# ----------------------------
+# Python
+# ----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ----------------------------
+# Jupyter / VS Code
+# ----------------------------
+.ipynb_checkpoints/
+.vscode/
+*.ipynb
+
+# ----------------------------
+# Streamlit secrets
+# Never commit API tokens or passwords.
+# ----------------------------
+.streamlit/secrets.toml
+
+# ----------------------------
+# Temporary evaluation output
+# (Keep evaluation_metrics.json and confusion_matrix.png so the
+# deployed app can display real test results.)
+# ----------------------------
+outputs/_evaluation_temp/
+
+# ----------------------------
+# OS / editor files
+# ----------------------------
+.DS_Store
+Thumbs.db
+.idea/
