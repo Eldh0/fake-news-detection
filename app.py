@@ -982,7 +982,7 @@ def render_detector_tab():
         analyze_clicked = st.button(
             "Analyze News",
             type="primary",
-            use_container_width=True,
+            width="stretch",
             disabled=not model_ready,
         )
 
@@ -1023,7 +1023,7 @@ def render_detector_tab():
         )
         st.button(
             "Load example",
-            use_container_width=True,
+            width="stretch",
             on_click=load_selected_sample,
         )
         st.caption("Examples are for testing the interface, not verified facts.")
@@ -1071,7 +1071,7 @@ def render_detector_tab():
 
 
 def render_performance_tab():
-    st.markdown('<div class="section-kicker">Held-out test results</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-kicker">Test-set results</div>', unsafe_allow_html=True)
     st.markdown(
         '<h2 class="input-title">Model performance</h2>',
         unsafe_allow_html=True,
@@ -1079,7 +1079,7 @@ def render_performance_tab():
     st.markdown(
         '<p class="input-help">These numbers are read from '
         "<code>outputs/evaluation_metrics.json</code>, which is created by "
-        "<code>evaluate_model.py</code> after training.</p>",
+        "<code>evaluate_model.py</code>.</p>",
         unsafe_allow_html=True,
     )
 
@@ -1122,12 +1122,16 @@ def render_performance_tab():
 
     test_samples = metrics.get("test_samples")
     class_counts = metrics.get("class_counts", {})
+    evaluation_note = metrics.get("evaluation_note")
     if test_samples:
         st.caption(
-            f"Measured on {test_samples:,} unseen test articles "
-            f"({class_counts.get('FAKE', 0):,} FAKE, {class_counts.get('REAL', 0):,} REAL). "
-            "The test split was never used to update the model."
+            f"Measured on {test_samples:,} test articles "
+            f"({class_counts.get('FAKE', 0):,} FAKE, {class_counts.get('REAL', 0):,} REAL)."
         )
+    if evaluation_note:
+        st.warning(evaluation_note)
+    else:
+        st.caption("This test split was never used to update the model.")
 
     left, right = st.columns([1.35, 1], gap="large")
 
@@ -1135,8 +1139,8 @@ def render_performance_tab():
         if CONFUSION_MATRIX_PNG.exists():
             st.image(
                 str(CONFUSION_MATRIX_PNG),
-                caption="Predicted vs. true labels on the held-out test set",
-                use_container_width=True,
+                caption="Predicted vs. true labels on the test set",
+                width="stretch",
             )
         else:
             st.info("Confusion-matrix image not found. Run `python evaluate_model.py`.")
@@ -1254,9 +1258,10 @@ def render_about_tab():
 
     st.markdown(
         '<div class="callout"><strong>For the viva:</strong> this project uses '
-        "supervised NLP. The model is fine-tuned on text labelled 0 (FAKE) and 1 "
-        "(REAL), then evaluated on a separate held-out test set using accuracy, "
-        "precision, recall, F1-score, and a confusion matrix. The probabilities "
+        "supervised NLP with text labelled 0 (FAKE) and 1 (REAL). Evaluation "
+        "reports accuracy, precision, recall, F1-score, and a confusion matrix. "
+        "Check the Model performance tab to see whether the results come from a "
+        "locally trained model or a public-model reference run. The probabilities "
         "describe model confidence, not factual truth.</div>",
         unsafe_allow_html=True,
     )

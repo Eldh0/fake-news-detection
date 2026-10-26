@@ -35,9 +35,9 @@ Use this route if you want a working app and deployment quickly.
 
 4. For deployment, add the same `MODEL_REPO_ID` value in Streamlit Community Cloud secrets.
 5. Skip sections 3, 5, 6, and 8 when using this route. Use section 4 to install the app dependencies.
-6. The **Model performance** tab will be empty unless you generate `outputs/` with your own test split. The Detector tab works without it.
+6. `outputs/` can contain a reference evaluation of the public model on this project's test split. The app labels it as a reference because the public model may have seen the same Kaggle dataset during its own training. The Detector tab works without `outputs/`.
 
-The public model was not trained by you, so do not present its model-card scores as your own. If you need your own metrics, evaluate it on a held-out test split and state clearly that you used a public checkpoint.
+The public model was not trained by you, so do not present its model-card scores as your own. For a clean held-out result, train your own model or evaluate on external data, and state clearly that you used a public checkpoint.
 
 ---
 
@@ -58,7 +58,7 @@ The public model was not trained by you, so do not present its model-card scores
 | File | Purpose |
 |---|---|
 | `train_model.py` | Cleans data, creates splits, fine-tunes DistilBERT, and saves the model |
-| `evaluate_model.py` | Loads the saved model and test set, calculates metrics, saves charts |
+| `evaluate_model.py` | Evaluates a local or Hub model on the test set, calculates metrics, saves charts |
 | `app.py` | Streamlit frontend and inference |
 | `colab_train_and_deploy.ipynb` | Ready-to-run Colab training, evaluation, and Hub upload notebook |
 | `requirements.txt` | App-only deployment dependencies (PyTorch, Transformers, Streamlit) |
@@ -267,13 +267,31 @@ You should see validation accuracy, precision, recall, and F1 after each epoch. 
 
 ## 6. Evaluate the model
 
-Run:
+For the locally trained `saved_model/`:
 
 ```powershell
 python evaluate_model.py
 ```
 
-This loads the saved model and the exact test split created by training. It calculates:
+For the public Hub model instead:
+
+```powershell
+python evaluate_model.py --model therealcyberlord/fake-news-classification-distilbert
+```
+
+To evaluate a random sample on a slow CPU:
+
+```powershell
+python evaluate_model.py --model therealcyberlord/fake-news-classification-distilbert --max-samples 1000
+```
+
+Create the test split without training first if needed:
+
+```powershell
+python -c "import train_model; d=train_model.load_and_clean_data(); _,_,t=train_model.make_splits(d); t[['text','label']].to_csv('data/test.csv', index=False)"
+```
+
+This loads the model and the exact test split created by `train_model.py`. It calculates:
 
 - Accuracy
 - Precision
@@ -290,7 +308,9 @@ outputs/confusion_matrix.png
 outputs/classification_report.txt
 ```
 
-It does **not** invent scores. If you have not trained a model yet, the script stops with a clear error.
+It does **not** invent scores. If the required model or test file is missing, the script stops with a clear error.
+
+When you evaluate the public Hub model, the script adds an `evaluation_note` to the JSON and the app displays a warning. The reason is that the public model was trained on the same Kaggle source dataset, so a random split of that dataset is not a clean held-out test for that model.
 
 ### What the metrics mean
 
@@ -800,4 +820,4 @@ python evaluate_model.py
 streamlit run app.py
 ```
 
-No evaluation numbers are included in this README. If you train your own model, run `evaluate_model.py` to generate real results. If you use the public model, you may evaluate it on your own held-out data but must clearly state that you did not train it.
+The current `outputs/` files contain a reference evaluation of the public Hub model on 1,000 randomly sampled test rows. The app displays a warning because the public model may have seen the same Kaggle dataset during its own training. For a clean held-out result, train your own model or evaluate on external data. If you use the public model, clearly state that you did not train it.
