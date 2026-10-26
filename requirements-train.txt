@@ -1,0 +1,9 @@
+-r requirements.txt
+
+datasets
+accelerate
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn

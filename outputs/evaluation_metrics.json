@@ -1,0 +1,44 @@
+{
+  "accuracy": 0.999,
+  "precision": 0.9982,
+  "recall": 1.0,
+  "f1_score": 0.9991,
+  "confusion_matrix": [
+    [
+      458,
+      1
+    ],
+    [
+      0,
+      541
+    ]
+  ],
+  "labels": [
+    "FAKE",
+    "REAL"
+  ],
+  "positive_class": "REAL",
+  "test_samples": 1000,
+  "class_counts": {
+    "FAKE": 459,
+    "REAL": 541
+  },
+  "per_class": {
+    "FAKE": {
+      "precision": 1.0,
+      "recall": 0.9978,
+      "f1_score": 0.9989,
+      "support": 459
+    },
+    "REAL": {
+      "precision": 0.9982,
+      "recall": 1.0,
+      "f1_score": 0.9991,
+      "support": 541
+    }
+  },
+  "model": "therealcyberlord/fake-news-classification-distilbert",
+  "model_source": "therealcyberlord/fake-news-classification-distilbert",
+  "evaluated_at_utc": "2026-10-26T17:15:46.608827+00:00",
+  "evaluation_note": "This public model was evaluated on this project's local test split. It may have seen this dataset during its own training, so treat these numbers as a reference rather than a clean held-out result."
+}
